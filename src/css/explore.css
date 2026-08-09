@@ -1,0 +1,19 @@
+.explore-grid-container{
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 1rem;
+}
+.explore-interface{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--white);
+    border-radius: 1rem;
+}
+.explore-text{
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    justify-content: center;
+    align-items: center;
+}

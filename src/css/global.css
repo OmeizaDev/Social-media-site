@@ -1,0 +1,63 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+:root{
+    --primary-color: #3d67ff;
+    --hover-color: #001c83;
+    --primary-color-light: #e9eeff;
+    --white: #ffffff;
+    --background-color: #f5f5f5;
+    --text-color: #1a1a1a;
+    --subtext-color: #6b6b6b;
+    --btn-padding: 0.625rem 1.25rem;
+    --sticky-top-left: 5.4rem;
+    --sticky-top-right: 5.4rem;
+}
+body {
+    background-color: var(--background-color); 
+    margin: 1.25rem 4.375rem ;
+    
+}
+.create-btn{
+   background-color: var(--primary-color);
+   border: none;
+   color: var(--white);
+   padding: var(--btn-padding);
+   border-radius: 5rem;
+   cursor:pointer;
+   font-size: 0.844rem;
+   font-weight: 400;
+}
+.create-btn:hover{
+    background-color: #0020a1;
+    transition: background-color 0.3s ease;
+}
+
+.primary-btn{
+   background-color: var(--primary-color);
+   border: none;
+   color: var(--white);
+   padding: var(--btn-padding);
+   border-radius: 5rem;
+   cursor:pointer;
+   font-size: 0.844rem;
+   font-weight: 400;
+}
+.primary-btn:hover{
+    background-color: #0020a1;
+    transition: background-color 0.3s ease;
+}
+p{
+    font-size: 14px;
+}
+@media screen and (max-width:768px){
+
+    body{
+        margin:0.5rem;
+        padding-bottom:90px;
+    }
+}
