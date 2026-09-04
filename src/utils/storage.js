@@ -1,8 +1,6 @@
 export function saveUser(user){
 
-    localStorage.setItem("currentUser",
-        JSON.stringify(user)
-    );
+    localStorage.setItem("currentUser", JSON.stringify(user));
 
 }
 
