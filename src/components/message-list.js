@@ -1,178 +1,247 @@
-// src/components/message-list.js
+import { appState } from "../app/appstate.js";
+import { getUserById, listenToConversations } from "../utils/storage.js";
+import { createUserProfileLink, initProfileLinks } from "./UserProfileLink.js";
+import { getAuthenticatedUser } from "../auth/auth.js";
+
 export function messageList() {
     return `
-    <div class="message-container">
-        <div class="message-content">
-            <div class="message-header">
-                <h4>Messages</h4>
-                <button class="new-message create-btn">
-                    <span class="material-symbols-outlined">add</span>
-                </button>
-            </div>
-            <div class="search-messages-container">
-                <button class="search-messages-btn">
-                    <span class="material-symbols-outlined">search</span>
-                </button>
-                <input type="text" class="messages-search-input" placeholder="Search messages">
-            </div>
-        </div>
+        <div class="message-container">
+            <div class="message-content">
+                <div class="message-header">
+                    <h4>Messages</h4>
 
-        <div class="message-category-nav">
-            <div class="category-item active" data-tab="primary">Primary</div>
-            <div class="category-item" data-tab="general">General</div>
-            <div class="category-item" data-tab="request">Request(2)</div>
-        </div>
+                    <button class="new-message create-btn">
+                        <span class="material-symbols-outlined">add</span>
+                    </button>
+                </div>
 
-        <div class="message-category-content active" id="primary">
-            <div class="message-list-container">
-                <div class="message-list" data-user="Micheal Quins">
-                    <div class="chat-profile-image">
-                        <img src="../images/Profile_img (2).jpg" class="profile-img" alt="">
-                    </div>
-                    <div class="message-body">
-                        <h5>Micheal Quins</h5>
-                        <p class="Text-muted">Just woke up bruh</p>
+                <div class="search-messages-container">
+                    <button class="search-messages-btn">
+                        <span class="material-symbols-outlined">search</span>
+                    </button>
+
+                    <input
+                        type="text"
+                        class="messages-search-input"
+                        placeholder="Search messages"
+                    >
+                </div>
+            </div>
+
+            <div class="message-category-nav">
+                <div class="category-item active" data-tab="primary">
+                    Primary
+                </div>
+
+                <div class="category-item" data-tab="general">
+                    General
+                </div>
+
+                <div class="category-item" data-tab="request">
+                    Request(2)
+                </div>
+            </div>
+
+            <div class="message-category-content active" id="primary">
+                <div
+                    class="message-list-container"
+                    id="dynamic-message-list"
+                ></div>
+            </div>
+
+            <div class="message-category-content" id="general">
+                <div class="message-list-container">
+                    <div style="padding:1rem;color:#999;text-align:center;">
+                        No general messages
                     </div>
                 </div>
-                <div class="message-list" data-user="Williams Churchl">
-                    <div class="chat-profile-image">
-                        <img src="../images/Profile_img (3).jpg" class="profile-img" alt="">
-                    </div>
-                    <div class="message-body">
-                        <h5>Williams Churchl</h5>
-                        <p class="Text-muted">Let's meet tomorrow</p>
-                    </div>
-                </div>
-                <div class="message-list" data-user="Raymond Ceasr">
-                    <div class="chat-profile-image">
-                        <img src="../images/Profile_img (4).jpg" class="profile-img" alt="">
-                    </div>
-                    <div class="message-body">
-                        <h5>Raymond Ceasr</h5>
-                        <p class="Text-muted">The person sent his regards</p>
+            </div>
+
+            <div class="message-category-content" id="request">
+                <div class="message-list-container">
+                    <div style="padding:1rem;color:#999;text-align:center;">
+                        No requests
                     </div>
                 </div>
             </div>
         </div>
-
-        <div class="message-category-content" id="general">
-            <div class="message-list-container">
-                <div class="message-list" data-user="Wisnley Snips">
-                    <div class="chat-profile-image">
-                        <img src="../images/Profile_img (7).jpg" class="profile-img" alt="">
-                    </div>
-                    <div class="message-body">
-                        <h5>Wisnley Snips</h5>
-                        <p class="Text-muted">Just woke up bruh</p>
-                    </div>
-                </div>
-                <div class="message-list" data-user="Willians Cradle">
-                    <div class="chat-profile-image">
-                        <img src="../images/Profile_img (6).jpg" class="profile-img" alt="">
-                    </div>
-                    <div class="message-body">
-                        <h5>Williams Cradle</h5>
-                        <p class="Text-muted">Let's meet tomorrow</p>
-                    </div>
-                </div>
-                <div class="message-list" data-user="Godfrey Samir">
-                    <div class="chat-profile-image">
-                        <img src="../images/Profile_img (8).jpg" class="profile-img" alt="">
-                    </div>
-                    <div class="message-body">
-                        <h5>Godfrey Samir</h5>
-                        <p class="Text-muted">The person sent his regards</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="message-category-content" id="request">
-            <div class="message-list-container">
-                <div class="message-request-list" data-user="Micheal Rafael">
-                    <div class="message-list">
-                        <div class="chat-profile-image">
-                            <img src="../images/Profile_img (4).jpg" class="profile-img" alt="">
-                        </div>
-                        <div class="message-body">
-                            <h5>Micheal Rafael</h5>
-                            <p class="Text-muted">Just woke up bruh</p>
-                        </div>
-                    </div>
-                    <div class="action">
-                        <button class="create-btn action-accept">Accept</button>
-                        <button class="create-btn action-decline">Decline</button>
-                    </div>
-                </div>
-                <div class="message-request-list" data-user="Ligau Maduro">
-                    <div class="message-list">
-                        <div class="chat-profile-image">
-                            <img src="../images/Profile_img (5).jpg" class="profile-img" alt="">
-                        </div>
-                        <div class="message-body">
-                            <h5>Ligau Maduro</h5>
-                            <p class="Text-muted">Just woke up bruh</p>
-                        </div>
-                    </div>
-                    <div class="action">
-                        <button class="create-btn action-accept">Accept</button>
-                        <button class="create-btn action-decline">Decline</button>
-                    </div>
-                </div>
-                <div class="message-request-list" data-user="Hane Mathew">
-                    <div class="message-list">
-                        <div class="chat-profile-image">
-                            <img src="../images/Profile_img (8).jpg" class="profile-img" alt="">
-                        </div>
-                        <div class="message-body">
-                            <h5>Hane Mathew</h5>
-                            <p class="Text-muted">Just woke up bruh</p>
-                        </div>
-                    </div>
-                    <div class="action">
-                        <button class="create-btn action-accept">Accept</button>
-                        <button class="create-btn action-decline">Decline</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>`;
+    `;
 }
 
-export function initMessageList() {
-    const tabs = document.querySelectorAll(".category-item");
-    const contents = document.querySelectorAll(".message-category-content");
+let stopConversationListener = null;
 
-    function activateTab(tab) {
-        tabs.forEach(t => t.classList.remove("active"));
-        tab.classList.add("active");
-        contents.forEach(c => c.classList.remove("active"));
-        const target = tab.dataset.tab;
-        document.getElementById(target).classList.add("active");
-    }
+export async function initMessageList() {
+    const tabs = document.querySelectorAll(".category-item");
+    const contents = document.querySelectorAll(
+        ".message-category-content"
+    );
 
     tabs.forEach(tab => {
         tab.addEventListener("click", () => {
-            activateTab(tab);
+            tabs.forEach(item =>
+                item.classList.remove("active")
+            );
+
+            tab.classList.add("active");
+
+            contents.forEach(content =>
+                content.classList.remove("active")
+            );
+
+            const target = document.getElementById(
+                tab.dataset.tab
+            );
+
+            if (target) {
+                target.classList.add("active");
+            }
         });
     });
 
     const newMessageBtn = document.querySelector(".new-message");
+
     if (newMessageBtn) {
         newMessageBtn.addEventListener("click", () => {
-            document.dispatchEvent(new Event("openFriendModal"));
+            document.dispatchEvent(
+                new Event("openFriendModal")
+            );
         });
     }
 
-    const messages = document.querySelectorAll(".message-list");
-    messages.forEach(message => {
-        message.addEventListener("click", () => {
-            const user = message.dataset.user;
+    if (stopConversationListener) {
+        stopConversationListener();
+    }
+
+    stopConversationListener = listenToConversations(async conversations => {
+            await renderConversations(conversations);
+        });
+}
+
+export async function renderConversations(conversations = []) {
+    const container = document.querySelector("#dynamic-message-list");
+
+    if (!container) return;
+
+    appState.currentUser = await getAuthenticatedUser();
+    const currentUser = appState.currentUser;
+    
+
+    if (!currentUser) {
+        container.innerHTML = `
+            <div style="padding:1rem;color:#999;text-align:center;">
+                Please log in to see messages.
+            </div>
+        `;
+        return;
+    }
+
+    const myConversations = conversations.filter(
+        conversation => {
+            const participants = conversation.participants || [];
+
+            return participants.some(
+                id => String(id) === String(currentUser.id)
+            );
+        }
+    );
+
+    const badge = document.querySelector(".message-count");
+
+    const totalUnread = myConversations.reduce((total, conversation) => {
+        return total + (conversation.unreadCount?.[currentUser.id] || 0);
+    }, 0);
+
+    if (badge) {
+        badge.textContent = totalUnread;
+
+        if (totalUnread > 0) {
+            badge.classList.remove("hidden");
+        } else {
+            badge.classList.add("hidden");
+        }
+    }
+
+    if (myConversations.length === 0) {
+        container.innerHTML = `
+            <div style="padding:1rem;color:#999;text-align:center;">
+                No conversations yet. Start a new chat!
+            </div>
+        `;
+        return;
+    }
+
+    container.innerHTML = "";
+
+    for (const conversation of myConversations) {
+        const participants = conversation.participants || [];
+
+        const otherUserId = participants.find(
+                id => String(id) !== String(currentUser.id)
+            );
+
+        if (!otherUserId) continue;
+
+        const otherUser = await getUserById(otherUserId);
+
+        if (!otherUser) continue;
+
+        const profileLinkHtml = createUserProfileLink(
+                otherUser.id,
+                otherUser.profileImage,
+                otherUser.fullName
+            );
+                const isMine = String(conversation.lastMessageSenderId) === String(currentUser.id);
+
+                const preview = conversation.lastMessage
+                ? conversation.lastMessage.length > 30
+                    ? conversation.lastMessage.slice(0, 30) + "..."
+                    : conversation.lastMessage
+                : "Start chatting";
+
+        const messageItem = document.createElement("div");
+
+        messageItem.classList.add("message-list");
+
+        messageItem.dataset.userId = otherUser.id;
+
+        messageItem.dataset.conversationId = conversation.id;
+
+        messageItem.innerHTML = `
+            <div class="chat-profile-image">
+                ${profileLinkHtml}
+            </div>
+
+            <div class="message-body">
+                <h5>
+                    ${otherUser.fullName || otherUser.username}
+                </h5>
+
+                <p class="Text-muted">
+                    ${isMine ? `You: ${preview}` : preview}
+                </p>
+            </div>
+        `;
+
+        container.appendChild(messageItem);
+
+        messageItem.addEventListener("click", () => {
             document.dispatchEvent(
                 new CustomEvent("messageSelected", {
-                    detail: { user: user }
+                    detail: {
+                        userId: messageItem.dataset.userId,
+                        conversationId:
+                            messageItem.dataset.conversationId
+                    }
                 })
             );
+
+            const layout = document.querySelector(".message-grid-container");
+
+            if (window.innerWidth <= 768 && layout) {
+                layout.classList.add("show-chat");
+            }
         });
-    });
+    }
+
+    initProfileLinks();
 }

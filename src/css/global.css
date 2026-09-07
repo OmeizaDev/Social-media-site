@@ -19,7 +19,7 @@
 }
 body {
     background-color: var(--background-color); 
-    margin: 1.25rem 4.375rem ;
+    margin:5px  ;
     
 }
 .create-btn{

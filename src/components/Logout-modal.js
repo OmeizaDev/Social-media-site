@@ -1,4 +1,3 @@
-// src/components/Logout-modal.js
 import { logout } from "../auth/auth.js";
 
 export function logoutModal() {
@@ -27,26 +26,24 @@ export function initLogoutModal() {
 
     if (!modal) return;
 
-    document.addEventListener("openLogoutModal", () => { 
+    document.addEventListener("openLogoutModal", () => {
         modal.classList.remove("hidden");
     });
 
-    if (cancel) {
-        cancel.addEventListener("click", () => {
-            modal.classList.add("hidden");
-        });
-    }
+    cancel?.addEventListener("click", () => {
+        modal.classList.add("hidden");
+    });
 
-    if (closeIcon) {
-        closeIcon.addEventListener("click", () => {
-            modal.classList.add("hidden");
-        });
-    }
+    closeIcon?.addEventListener("click", () => {
+        modal.classList.add("hidden");
+    });
 
-    if (logOutBtn) {
-        logOutBtn.addEventListener("click", () => {
-            logout();
-            window.location.href = "../Login-page.html";
-        });
-    }
+    logOutBtn?.addEventListener("click", async () => {
+        try {
+            await logout();
+            window.location.href = "./Login-page.html";
+        } catch (error) {
+            console.error("Logout failed:", error);
+        }
+    });
 }

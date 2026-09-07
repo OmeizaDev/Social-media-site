@@ -13,16 +13,15 @@
     border-radius: 1rem;
 }
 .profile-page{
-    padding: 2rem;
+    padding: 1rem;
 }
 
-
-/* Header */
+/* ======= Header ======= */
 
 .profile-header{
     display:flex;
     flex-direction: column;
-    gap:2rem;
+    gap:1rem;
     align-items:center;
     justify-content: center;
     padding-bottom:2rem;
@@ -67,7 +66,27 @@
     background:var(--background-color);
 }
 
-/* Stats */
+.follow-btn{
+    border:none;
+    padding:.6rem 1.5rem;
+    border-radius:.5rem;
+    cursor:pointer;
+    background:var(--primary-color);
+    color: var(--white);
+}
+.follow-btn{
+    display: none;
+}
+
+.msg-btn{
+    border:none;
+    padding:.6rem 1.5rem;
+    border-radius:.5rem;
+    cursor:pointer;
+    background:var(--background-color);
+}
+
+/* ======== Stats ========= */
 
 .profile-stats{
     display:flex;
@@ -83,8 +102,7 @@
     color:var(--subtext-color);
 }
 
-
-/* Tabs */
+/* ======= Tabs ======= */
 
 .profile-tabs{
     display:flex;
@@ -104,13 +122,16 @@
     gap:.4rem;
     color:var(--subtext-color);
 }
-
+.profile-actions{
+    display: flex;
+    gap: 0.45rem
+}
 .profile-tabs .active{
     color:var(--primary-color);
     border-top:2px solid var(--primary-color);
 }
 
-/* Posts */
+/* ======== Posts ======== */
 
 .profile-posts{
     margin-top:1.5rem;
@@ -129,7 +150,7 @@
     border-radius: 0.8rem;
 }
 
-/* Edit profile Popup */
+/* ======= Edit profile Popup ======== */
 .header-icon{
     cursor: pointer;
 }
@@ -244,4 +265,71 @@
 }
 .hidden{
     display: hidden;
+}
+
+/* ================= Mobile ================= */
+
+@media screen and (max-width:768px){
+    
+    .profile-grid-container{
+        grid-template-columns: 1fr;
+    }    
+    .left{
+        position: fixed;
+        top: auto;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 75px;
+        z-index:999;
+    }
+    .profile-interface{
+        border-radius: 1rem;
+        width: 100%;
+        height: 100vh;
+    }
+    .profile-image-container{
+        width:6rem;
+        height:6rem;
+    }
+    .profile-top{
+        gap:1rem;
+    }
+    .profile-top h2{
+        font-size:1.1rem;
+    }
+    .edit-profile-btn{
+        font-size: 0.8rem;
+        padding-inline: 13px;
+    }
+    .profile-stats{
+        display:flex;
+        gap:1rem;
+    }
+    .profile-stats div{
+        display:flex;
+        gap:.1.2rem;
+        font-size: 14.5px;
+    }
+    .profile-posts{
+        gap:0.5rem;
+    }
+    .profile-post{
+        height:7rem;
+    }
+    .profile-page{
+        padding: 0.4rem;
+    }
+    .follow-btn{
+        border:none;
+        padding:0.6rem 1rem;
+        border-radius:0.5rem;
+    }
+    .msg-btn{
+        border:none;
+        padding:.6rem 1rem;
+        border-radius:0.5rem;
+        height: 40px;
+    }
+    
 }

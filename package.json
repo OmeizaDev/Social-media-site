@@ -2,17 +2,19 @@
   "name": "social-media-site",
   "version": "1.0.0",
   "description": "",
-  "main": "script.js",
+  "main": "src/Pages/script.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npm run check",
+    "check": "node --check src/Pages/script.js && node --check src/Pages/script-login.js && node --check src/Pages/chat.js && node --check src/Pages/explore.js && node --check src/Pages/profile.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "dependencies": {
     "@tailwindcss/cli": "^4.3.2",
     "@tailwindcss/forms": "^0.5.11",
+    "firebase": "^12.18.0",
     "tailwindcss": "^4.3.2"
   }
 }

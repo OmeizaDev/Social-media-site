@@ -1,4 +1,6 @@
-// src/components/newMsgModal.js
+import { appState } from "../app/appstate.js";
+import { createUserProfileLink, initProfileLinks } from "./UserProfileLink.js";
+
 export function newMsgModal() {
     return `
     <div class="message-friend-modal-overlay hidden"> 
@@ -13,57 +15,13 @@ export function newMsgModal() {
                 <button class="search-messages-btn">
                     <span class="material-symbols-outlined">search</span>
                 </button>
-                <input type="text" class="search-input-friends" placeholder="Search friends">
+                <input type="text" class="search-input-friends" placeholder="Search users">
             </div>
-            <div class="friend-list-container">
-                <div class="message-list friends-list" data-user="Micheal Quins">
-                    <div class="chat-profile-image">
-                        <img src="../images/Profile_img (2).jpg" class="profile-img" alt="">
-                    </div>
-                    <div class="message-body friend-name">
-                        <h5>Micheal Quins</h5>
-                        <p class="Text-muted">Mike_quins5</p>
-                    </div>
-                </div>
-                <div class="message-list friends-list" data-user="Jaquine Chaplin">
-                    <div class="chat-profile-image">
-                        <img src="../images/Profile_img (3).jpg" class="profile-img" alt="">
-                    </div>
-                    <div class="message-body friend-name">
-                        <h5>Jaquine Chaplin</h5>
-                        <p class="Text-muted">Jaq_Chaln</p>
-                    </div>
-                </div>
-                <div class="message-list friends-list" data-user="Alexis Sanchez">
-                    <div class="chat-profile-image">
-                        <img src="../images/Profile_img (4).jpg" class="profile-img" alt="">
-                    </div>
-                    <div class="message-body friend-name">
-                        <h5>Alexis Sanchez</h5>
-                        <p class="Text-muted">EL_Sanche</p>
-                    </div>
-                </div>
-                <div class="message-list friends-list" data-user="Jonny Mctavish">
-                    <div class="chat-profile-image">
-                        <img src="../images/Profile_img (6).jpg" class="profile-img" alt="">
-                    </div>
-                    <div class="message-body friend-name">
-                        <h5>Jonny Mctavish</h5>
-                        <p class="Text-muted">_Soap</p>
-                    </div>
-                </div>
-                <div class="message-list friends-list" data-user="Ibrahim Micheal">
-                    <div class="chat-profile-image">
-                        <img src="../images/Profile_img (5).jpg" class="profile-img" alt="">
-                    </div>
-                    <div class="message-body friend-name">
-                        <h5>Ibrahim Micheal</h5>
-                        <p class="Text-muted">Ibrah_mike</p>
-                    </div>
-                </div>
+            <div class="friend-list-container" id="dynamic-friend-list">
+                <!-- Friends will be rendered here dynamically -->
             </div>
             <div class="no-friends-result hidden">
-                <p>No result found</p>
+                <p>No users found</p>
             </div>
         </div>
     </div>`;
@@ -71,21 +29,13 @@ export function newMsgModal() {
 
 export function initNewMsgModal() {
     const modal = document.querySelector(".message-friend-modal-overlay");
+    const searchInput = document.querySelector(".search-input-friends");
 
     document.addEventListener("openFriendModal", () => {
-        if (modal) modal.classList.remove("hidden");
-    });
-
-    const friends = document.querySelectorAll(".friends-list");
-    friends.forEach(friend => {
-        friend.addEventListener("click", () => {
-            document.dispatchEvent(
-                new CustomEvent("friendSelected", {
-                    detail: { user: friend.dataset.user }
-                })
-            );
-            if (modal) modal.classList.add("hidden");
-        });
+        if (modal) {
+            modal.classList.remove("hidden");
+            renderFriendList("");
+        }
     });
 
     const closeModal = document.querySelector(".header-icon");
@@ -95,30 +45,99 @@ export function initNewMsgModal() {
         });
     }
 
-    // Search functionality
-    const searchInput = document.querySelector(".search-input-friends");
-    if (searchInput) {
-        searchInput.addEventListener("input", (e) => {
-            const query = e.target.value.toLowerCase();
-            const friendItems = document.querySelectorAll(".friends-list");
-            const noResult = document.querySelector(".no-friends-result");
-            let hasResults = false;
-
-            friendItems.forEach(item => {
-                const name = item.querySelector("h5")?.textContent?.toLowerCase() || "";
-                const username = item.querySelector(".Text-muted")?.textContent?.toLowerCase() || "";
-                
-                if (name.includes(query) || username.includes(query)) {
-                    item.style.display = "";
-                    hasResults = true;
-                } else {
-                    item.style.display = "none";
-                }
-            });
-
-            if (noResult) {
-                noResult.classList.toggle("hidden", hasResults);
+    if (modal) {
+        modal.addEventListener("click", (e) => {
+            if (e.target === modal) {
+                modal.classList.add("hidden");
             }
         });
     }
+
+    if (searchInput) {
+        searchInput.addEventListener("input", (e) => {
+            const query = e.target.value.trim().toLowerCase();
+            renderFriendList(query);
+        });
+    }
+}
+
+// Render dynamic friend list
+
+function renderFriendList(query) {
+    const container = document.getElementById("dynamic-friend-list");
+    const noResult = document.querySelector(".no-friends-result");
+    if (!container) return;
+
+    const currentUser = appState.currentUser;
+    if (!currentUser) {
+        container.innerHTML = `
+        <div style="padding:1rem;color:#999;text-align:center;">
+        Please log in.
+        </div>`;
+        return;
+    }
+
+    let allUsers = appState.users.filter(
+        user => String(user.id) !== String(currentUser.id)
+    );
+
+    if (query) {
+        allUsers = allUsers.filter(user =>
+            user.fullName.toLowerCase().includes(query) ||
+            user.username.toLowerCase().includes(query)
+        );
+    }
+
+    if (allUsers.length === 0) {
+        container.innerHTML = "";
+        if (noResult) noResult.classList.remove("hidden");
+        return;
+    }
+
+    if (noResult) noResult.classList.add("hidden");
+
+    let html = "";
+    allUsers.forEach(user => {
+        const profileLinkHtml = createUserProfileLink(
+            user.id,
+            user.profileImage,
+            user.fullName
+        );
+
+        html += `
+            <div class="message-list friends-list" data-user-id="${user.id}">
+                <div class="chat-profile-image">
+                    ${profileLinkHtml}
+                </div>
+                <div class="message-body friend-name">
+                    <h5>${user.fullName}</h5>
+                    <p class="Text-muted">${user.username}</p>
+                </div>
+            </div>
+        `;
+    });
+
+    container.innerHTML = html;
+
+    const friends = container.querySelectorAll(".friends-list");
+    friends.forEach(friend => {
+        const newFriend = friend.cloneNode(true);
+        friend.parentNode.replaceChild(newFriend, friend);
+
+        newFriend.addEventListener("click", () => {
+            const userId = newFriend.dataset.userId;
+            if (userId) {
+                document.dispatchEvent(
+                    new CustomEvent("friendSelected", {
+                        detail: { userId: userId }
+                    })
+                );
+                const modal = document.querySelector(".message-friend-modal-overlay");
+                if (modal) modal.classList.add("hidden");
+            }
+        });
+    });
+
+
+    initProfileLinks();
 }

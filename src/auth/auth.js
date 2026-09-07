@@ -1,70 +1,51 @@
-import {users} from "../data/users.js";
-import {saveUser} from "../utils/storage.js";
+// src/auth/auth.js
 
-// Get all users
+import { auth } from "../firebase/firebase.js";
+import { 
+  createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, signOut,
+  onAuthStateChanged 
+} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
-export function getUsers(){
+import { getUserById } from "../utils/storage.js";
 
-    const storedUsers =
-    localStorage.getItem("users");
+export async function createAccount(newUser) {
+  const credential = await createUserWithEmailAndPassword(
+    auth,
+    newUser.email,
+    newUser.password
+  );
 
-    if(storedUsers){
-
-        return JSON.parse(storedUsers);
-
-    }
-
-    localStorage.setItem("users", JSON.stringify(users));
-
-    return users;
-
+  return credential.user;
 }
 
-// Create account
-
-export function createAccount(newUser){
-
-    const allUsers = getUsers();
-
-    allUsers.push(newUser);
-
-    localStorage.setItem(
-        "users",
-        JSON.stringify(allUsers)
-    );
-
-    return newUser;
-
+export async function login(email, password) {
+  const userCredential = await signInWithEmailAndPassword(auth, email, password);
+  return userCredential.user;
 }
 
-// Login
+export function getAuthenticatedUser() {
+  return new Promise((resolve) => {
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      unsubscribe();
 
-export function login(email,password){
+      if (!firebaseUser) {
+        resolve(null);
+        return;
+      }
 
-    const allUsers = getUsers();
+      const profile = await getUserById(firebaseUser.uid);
 
-    const user =
-    allUsers.find(user =>
-        user.email === email &&
-        user.password === password
-    );
-
-    if(user){
-
-        saveUser(user);
-
-        return user;
-
-    }
-
-    return null;
-
+      resolve({
+        ...profile, id: firebaseUser.uid
+      });
+    });
+  });
 }
 
-// Logout
+export async function logout() {
+  await signOut(auth);
+}
 
-export function logout(){
-
-    localStorage.removeItem("currentUser");
-
+export async function resetPassword(email) {
+  await sendPasswordResetEmail(auth, email);
 }

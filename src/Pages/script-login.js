@@ -1,12 +1,9 @@
+// src/Pages/script-login.js
 
-import { login, createAccount } from "../auth/auth.js";
-import { saveUser, getUser } from "../utils/storage.js";
+import { login, createAccount, resetPassword } from "../auth/auth.js";
+import { saveUserToFirestore } from "../utils/storage.js";
 
-// ============================================
-// ELEMENTS
-// ============================================
-
-// Login elements
+// LOGIN ELEMENTS
 const loginForm = document.querySelector("#login-form");
 const emailField = document.querySelector("#email-field");
 const passwordField = document.querySelector("#password");
@@ -14,7 +11,8 @@ const errorMessage = document.querySelector("#error-message");
 const passwordError = document.querySelector('#password-error');
 const loginBtn = document.querySelector("#login-btn");
 
-// Signup elements
+// SIGNUP ELEMENTS
+
 const createAccountForm = document.querySelector("#create-account-form");
 const signUpEmailField = document.querySelector("#signup-email-field");
 const signUpErrorMsg = document.querySelector("#signup-email-error");
@@ -27,12 +25,13 @@ const lastNameError = document.querySelector("#last-name-error");
 const DateOfBirth = document.querySelector("#date-of-birth");
 const DateOfBirthError = document.querySelector("#dob-error");
 const gender = document.querySelector("#gender");
-const genderError = document.querySelector("#gender-error");
+const genderError = document.querySelector("#gender-error"); 
 const createPasswordError = document.querySelector("#create-password-error");
 const confirmPasswordError = document.querySelector("#confirm-password-error");
 const createAccountBtn = document.querySelector("#create-account-btn");
 
-// Screen navigation elements
+// SCREEN NAVIGATION ELEMENT
+
 const loginScreen = document.querySelector("#login-screen");
 const resetPasswordScreen = document.querySelector("#reset-password-screen");
 const otpScreen = document.querySelector("#otp-screen");
@@ -41,316 +40,378 @@ const createAccountScreen = document.querySelector("#create-account-screen");
 const forgotPasswordBtn = document.querySelector("#forgot-password");
 const rememberPasswordBtn = document.querySelector("#remember-password");
 const resetLinkForm = document.querySelector("#reset-password-screen form");
-const otpForm = document.querySelector("#otp-form");
-const newPasswordForm = document.querySelector("#new-password-form");
 const createAccountNav = document.querySelector("#create-account-nav");
 const loginNavBtn = document.querySelector("#login-nav-btn");
-
-// ============================================
-// REGEX PATTERNS
-// ============================================
-
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-// ============================================
 // LOGIN FORM HANDLER
-// ============================================
 
-// ✅ Clear errors when typing
-emailField.addEventListener("input", function () {
-    errorMessage.textContent = "";
-    emailField.classList.remove("border-red-500");
-});
-
-passwordField.addEventListener("input", function () {
-    passwordError.textContent = "";
-    passwordField.classList.remove("border-red-500");
-});
-
-// ✅ LOGIN FORM SUBMIT
-loginForm.addEventListener("submit", function (event) {
-    event.preventDefault();
-
-    // Clear errors
-    errorMessage.textContent = "";
-    passwordError.textContent = "";
-
-    // EMAIL VALIDATION
-    if (emailField.value.trim() === "") {
-        errorMessage.textContent = "Email is required.";
-        emailField.classList.add("border-red-500");
-        return;
-    }
-
-    if (!emailPattern.test(emailField.value)) {
-        errorMessage.textContent = "Please enter a valid email.";
-        emailField.classList.add("border-red-500");
-        return;
-    }
-
-    // PASSWORD VALIDATION
-    if (passwordField.value.trim() === "") {
-        passwordError.textContent = "Password is required.";
-        passwordField.classList.add("border-red-500");
-        return;
-    }
-
-    if (passwordField.value.length < 6) {
-        passwordError.textContent = "Password must be at least 6 characters.";
-        passwordField.classList.add("border-red-500");
-        return;
-    }
-
-    // LOADING STATE
-    loginBtn.textContent = "Signing in...";
-    loginBtn.disabled = true;
-
-    // ✅ FIXED: Use login() function properly
-    setTimeout(() => {
-        // Try to login
-        const user = login(emailField.value, passwordField.value);
-        
-        if (user) {
-            // Success - save user and redirect
-            localStorage.setItem("currentUser", JSON.stringify(user));
-            window.location.href = "./index.html";
-        } else {
-            // Failed - show error
-            errorMessage.textContent = "Invalid email or password. Please try again.";
-            loginBtn.textContent = "Sign in";
-            loginBtn.disabled = false;
-        }
-    }, 1500);
-});
-
-// ============================================
-// SIGNUP FORM HANDLER
-// ============================================
-
-// ✅ Clear errors when typing
-signUpEmailField.addEventListener("input", () => {
-    signUpErrorMsg.textContent = "";
-    signUpEmailField.classList.remove("border-red-500");
-});
-
-firstName.addEventListener("input", () => {
-    firstNameError.textContent = "";
-    firstName.classList.remove("border-red-500");
-});
-
-lastName.addEventListener("input", () => {
-    lastNameError.textContent = "";
-    lastName.classList.remove("border-red-500");
-});
-
-DateOfBirth.addEventListener("input", () => {
-    DateOfBirthError.textContent = "";
-    DateOfBirth.classList.remove("border-red-500");
-});
-
-createPassword.addEventListener("input", () => {
-    createPasswordError.textContent = "";
-    createPassword.classList.remove("border-red-500");
-});
-
-confirmPassword.addEventListener("input", () => {
-    confirmPasswordError.textContent = "";
-    confirmPassword.classList.remove("border-red-500");
-});
-
-// ✅ SIGNUP FORM SUBMIT
-createAccountForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-
-    // Clear all errors
-    signUpErrorMsg.textContent = "";
-    firstNameError.textContent = "";
-    lastNameError.textContent = "";
-    DateOfBirthError.textContent = "";
-    createPasswordError.textContent = "";
-    confirmPasswordError.textContent = "";
-
-    // Remove all red borders
-    document.querySelectorAll('.border-red-500').forEach(el => {
-        el.classList.remove('border-red-500');
+// CLEAR ERROR WHEN ERRORS
+if (emailField) {
+    emailField.addEventListener("input", function () {
+        if (errorMessage) errorMessage.textContent = "";
+        emailField.classList.remove("border-red-500");
     });
+}
 
-    // ====================
-    // EMAIL VALIDATION
-    // ====================
-    if (signUpEmailField.value.trim() === "") {
-        signUpErrorMsg.textContent = "Email is required";
-        signUpEmailField.classList.add("border-red-500");
-        return;
-    }
+if (passwordField) {
+    passwordField.addEventListener("input", function () {
+        if (passwordError) passwordError.textContent = "";
+        passwordField.classList.remove("border-red-500");
+    });
+}
 
-    if (!emailPattern.test(signUpEmailField.value)) {
-        signUpErrorMsg.textContent = "Please enter a valid email";
-        signUpEmailField.classList.add("border-red-500");
-        return;
-    }
+if (loginForm) {
+    loginForm.addEventListener("submit", function (event) {
+        event.preventDefault();
 
-    // ====================
-    // FIRST NAME VALIDATION
-    // ====================
-    if (firstName.value.trim() === "") {
-        firstNameError.textContent = "First name is required";
-        firstName.classList.add("border-red-500");
-        return;
-    }
+        errorMessage.textContent = "";
+        passwordError.textContent = "";
 
-    // ====================
-    // LAST NAME VALIDATION
-    // ====================
-    if (lastName.value.trim() === "") {
-        lastNameError.textContent = "Last name is required";
-        lastName.classList.add("border-red-500");
-        return;
-    }
+        if (emailField.value.trim() === "") {
+            errorMessage.textContent = "Email is required.";
+            emailField.classList.add("border-red-500");
+            return;
+        }
 
-    // ====================
-    // DATE OF BIRTH VALIDATION
-    // ====================
-    if (DateOfBirth.value.trim() === "") {
-        DateOfBirthError.textContent = "Date of birth is required";
-        DateOfBirth.classList.add("border-red-500");
-        return;
-    }
+        if (!emailPattern.test(emailField.value)) {
+            errorMessage.textContent = "Please enter a valid email.";
+            emailField.classList.add("border-red-500");
+            return;
+        }
 
-    // ====================
-    // GENDER VALIDATION
-    // ====================
-    if (!gender.value) {
-        genderError.textContent = "Please select your gender";
-        gender.classList.add("border-red-500");
-        return;
-    }
+        if (passwordField.value.trim() === "") {
+            passwordError.textContent = "Password is required.";
+            passwordField.classList.add("border-red-500");
+            return;
+        }
 
-    // ====================
-    // PASSWORD VALIDATION
-    // ====================
-    if (createPassword.value.trim() === "") {
-        createPasswordError.textContent = "Password is required";
-        createPassword.classList.add("border-red-500");
-        return;
-    }
+        if (passwordField.value.length < 6) {
+            passwordError.textContent = "Password must be at least 6 characters.";
+            passwordField.classList.add("border-red-500");
+            return;
+        }
 
-    if (createPassword.value.length < 6) {
-        createPasswordError.textContent = "Password must be at least 6 characters";
-        createPassword.classList.add("border-red-500");
-        return;
-    }
+        loginBtn.textContent = "Signing in...";
+        loginBtn.disabled = true;
 
-    // ====================
-    // CONFIRM PASSWORD VALIDATION
-    // ====================
-    if (confirmPassword.value.trim() === "") {
-        confirmPasswordError.textContent = "Please confirm your password";
-        confirmPassword.classList.add("border-red-500");
-        return;
-    }
+        setTimeout(async () => {
+            try {
+                await login(emailField.value.trim(), passwordField.value);
+                window.location.href = "./index.html";
+            } catch (error) {
+                if (
+                    error.code === "auth/invalid-credential" ||
+                    error.code === "auth/wrong-password" ||
+                    error.code === "auth/user-not-found"
+                ) {
+                    errorMessage.textContent = "Incorrect email or password.";
+                } else {
+                    console.error(error);
+                    errorMessage.textContent = "Unable to sign in.";
+                }
 
-    if (createPassword.value !== confirmPassword.value) {
-        confirmPasswordError.textContent = "Passwords do not match";
-        confirmPassword.classList.add("border-red-500");
-        return;
-    }
+                loginBtn.textContent = "Sign in";
+                loginBtn.disabled = false;
+            }
+        }, 1500);
+    });
+}
 
-    // ====================
-    // LOADING STATE
-    // ====================
-    createAccountBtn.textContent = "Creating account...";
-    createAccountBtn.disabled = true;
+// SIGNUP FORM HANDLER
 
-    // ====================
-    // CREATE ACCOUNT
-    // ====================
-    setTimeout(() => {
-        // Create user object
-        const newUser = {
-            id: Date.now(),
-            fullName: `${firstName.value.trim()} ${lastName.value.trim()}`,
-            username: firstName.value.trim().toLowerCase(),
-            email: signUpEmailField.value.trim(),
-            password: createPassword.value,
-            profileImage: "../images/Profile_img (0).jpg",
-            gender: gender.value,
-            dateOfBirth: DateOfBirth.value,
-            followers: 0,
-            following: 0,
-            posts: 0,
-            createdAt: new Date().toISOString()
-        };
+// CLEAR ERRORS WHEN TYPING
 
-        // ✅ Save user using createAccount()
-        createAccount(newUser);
+if (signUpEmailField) {
+    signUpEmailField.addEventListener("input", () => {
+        if (signUpErrorMsg) signUpErrorMsg.textContent = "";
+        signUpEmailField.classList.remove("border-red-500");
+    });
+}
+
+if (firstName) {
+    firstName.addEventListener("input", () => {
+        if (firstNameError) firstNameError.textContent = "";
+        firstName.classList.remove("border-red-500");
+    });
+}
+
+if (lastName) {
+    lastName.addEventListener("input", () => {
+        if (lastNameError) lastNameError.textContent = "";
+        lastName.classList.remove("border-red-500");
+    });
+}
+
+if (DateOfBirth) {
+    DateOfBirth.addEventListener("input", () => {
+        if (DateOfBirthError) DateOfBirthError.textContent = "";
+        DateOfBirth.classList.remove("border-red-500");
+    });
+}
+
+if (createPassword) {
+    createPassword.addEventListener("input", () => {
+        if (createPasswordError) createPasswordError.textContent = "";
+        createPassword.classList.remove("border-red-500");
+    });
+}
+
+if (confirmPassword) {
+    confirmPassword.addEventListener("input", () => {
+        if (confirmPasswordError) confirmPasswordError.textContent = "";
+        confirmPassword.classList.remove("border-red-500");
+    });
+}
+
+if (gender) {
+    gender.addEventListener("change", () => {
+        if (genderError) genderError.textContent = "";
+        gender.classList.remove("border-red-500");
+    });
+}
+
+// SIGNUP FORM SUBMIT
+
+if (createAccountForm) {
+    createAccountForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        // CLEAR ALL ERRORS
+
+        if (signUpErrorMsg) signUpErrorMsg.textContent = "";
+        if (firstNameError) firstNameError.textContent = "";
+        if (lastNameError) lastNameError.textContent = "";
+        if (DateOfBirthError) DateOfBirthError.textContent = "";
+        if (genderError) genderError.textContent = "";
+        if (createPasswordError) createPasswordError.textContent = "";
+        if (confirmPasswordError) confirmPasswordError.textContent = "";
+
+        // REMOVE ALL RED BORDERS
+
+        document.querySelectorAll('.border-red-500').forEach(el => {
+            el.classList.remove('border-red-500');
+        });
+
+        // EMAIL VALIDATION
+
+        if (signUpEmailField.value.trim() === "") {
+            if (signUpErrorMsg) signUpErrorMsg.textContent = "Email is required";
+            signUpEmailField.classList.add("border-red-500");
+            return;
+        }
+
+        if (!emailPattern.test(signUpEmailField.value)) {
+            if (signUpErrorMsg) signUpErrorMsg.textContent = "Please enter a valid email";
+            signUpEmailField.classList.add("border-red-500");
+            return;
+        }
         
-        // Save current user
-        saveUser(newUser);
+        // FIRST NAME VALIDATION
+        
+        if (firstName.value.trim() === "") {
+            if (firstNameError) firstNameError.textContent = "First name is required";
+            firstName.classList.add("border-red-500");
+            return;
+        }
+        
+        // LAST NAME VALIDATION
+        
+        if (lastName.value.trim() === "") {
+            if (lastNameError) lastNameError.textContent = "Last name is required";
+            lastName.classList.add("border-red-500");
+            return;
+        }
+        
+        // DATE OF BIRTH VALIDATION
+        
+        if (DateOfBirth.value.trim() === "") {
+            if (DateOfBirthError) DateOfBirthError.textContent = "Date of birth is required";
+            DateOfBirth.classList.add("border-red-500");
+            return;
+        }
 
-        // Redirect to feed
+        if (new Date(DateOfBirth.value) > new Date()) {
+            if (DateOfBirthError) DateOfBirthError.textContent = "Date of birth cannot be in the future";
+            DateOfBirth.classList.add("border-red-500");
+            return;
+        }
+        
+        // GENDER VALIDATION
+        
+        if (!gender.value) {
+            if (genderError) genderError.textContent = "Please select your gender";
+            gender.classList.add("border-red-500");
+            return;
+        }
+        
+        // PASSWORD VALIDATION
+        
+        if (createPassword.value.trim() === "") {
+            if (createPasswordError) createPasswordError.textContent = "Password is required";
+            createPassword.classList.add("border-red-500");
+            return;
+        }
+
+        if (createPassword.value.length < 6) {
+            if (createPasswordError) createPasswordError.textContent = "Password must be at least 6 characters";
+            createPassword.classList.add("border-red-500");
+            return;
+        }
+        
+        // CONFIRM PASSWORD VALIDATION
+        
+        if (confirmPassword.value.trim() === "") {
+            if (confirmPasswordError) confirmPasswordError.textContent = "Please confirm your password";
+            confirmPassword.classList.add("border-red-500");
+            return;
+        }
+
+        if (createPassword.value !== confirmPassword.value) {
+            if (confirmPasswordError) confirmPasswordError.textContent = "Passwords do not match";
+            confirmPassword.classList.add("border-red-500");
+            return;
+        }
+        
+        // LOADING STATE
+        
+        createAccountBtn.textContent = "Creating account...";
+        createAccountBtn.disabled = true;
+        
+        // CREATE ACCOUNT
+        
+        setTimeout(async () => {
+        const newUser = {
+        fullName: `${firstName.value.trim()} ${lastName.value.trim()}`,
+        username: firstName.value.trim().toLowerCase() + Math.floor(Math.random() * 1000),
+        email: signUpEmailField.value.trim(),
+        password: createPassword.value,
+        profileImage: "../../images/Profile_img (0).jpg",
+        gender: gender.value,
+        dateOfBirth: DateOfBirth.value,
+        followers: [],
+        following: [],
+        posts: 0,
+        createdAt: Date.now()
+    };
+
+    try {
+        const createdUser = await createAccount(newUser);
+        newUser.id = createdUser.uid;
+        delete newUser.password;
+        await saveUserToFirestore(newUser);
         window.location.href = "./index.html";
 
-        // Reset button (just in case)
+    } catch (error) {
+        if (error.code === "auth/email-already-in-use") {
+            signUpErrorMsg.textContent = "Email already has an account.";
+        } 
+        else if (error.code === "auth/weak-password") {
+            createPasswordError.textContent = "Password should be at least 6 characters.";
+        } 
+        else {
+            console.error(error);
+            signUpErrorMsg.textContent = "Unable to create account.";
+        }
+
         createAccountBtn.textContent = "Create account";
         createAccountBtn.disabled = false;
-    }, 1500);
+    }
+}, 1500);
 });
+}
 
-// ============================================
 // SCREEN NAVIGATION
-// ============================================
 
 function hideAllScreens() {
-    loginScreen.classList.add("hidden");
-    resetPasswordScreen.classList.add("hidden");
-    otpScreen.classList.add("hidden");
-    changePasswordScreen.classList.add("hidden");
-    createAccountScreen.classList.add("hidden");
+    if (loginScreen) loginScreen.classList.add("hidden");
+    if (resetPasswordScreen) resetPasswordScreen.classList.add("hidden");
+    if (otpScreen) otpScreen.classList.add("hidden");
+    if (changePasswordScreen) changePasswordScreen.classList.add("hidden");
+    if (createAccountScreen) createAccountScreen.classList.add("hidden");
 }
 
 // Forgot Password
-forgotPasswordBtn.addEventListener("click", () => {
-    hideAllScreens();
-    resetPasswordScreen.classList.remove("hidden");
-});
+
+if (forgotPasswordBtn) {
+    forgotPasswordBtn.addEventListener("click", () => {
+        hideAllScreens();
+        if (resetPasswordScreen) resetPasswordScreen.classList.remove("hidden");
+    });
+}
 
 // Remember Password
-rememberPasswordBtn.addEventListener("click", (e) => {
-    e.preventDefault();
-    hideAllScreens();
-    loginScreen.classList.remove("hidden");
-});
+
+if (rememberPasswordBtn) {
+    rememberPasswordBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        hideAllScreens();
+        if (loginScreen) loginScreen.classList.remove("hidden");
+    });
+}
 
 // Reset Link
-resetLinkForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    hideAllScreens();
-    otpScreen.classList.remove("hidden");
-});
 
-// OTP
-otpForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    hideAllScreens();
-    changePasswordScreen.classList.remove("hidden");
-});
+if (resetLinkForm) {
+    resetLinkForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
 
-// New Password
-newPasswordForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    hideAllScreens();
-    loginScreen.classList.remove("hidden");
-});
+        const email = document.querySelector("#email").value.trim();
+
+        if (!emailPattern.test(email)) {
+            alert("Enter a valid email address.");
+            return;
+        }
+
+        const button = document.querySelector("#reset-link-btn");
+
+        button.textContent = "Sending...";
+        button.disabled = true;
+
+        try {
+            await resetPassword(email);
+
+            alert("Password reset email sent. Check your inbox.");
+
+            hideAllScreens();
+            loginScreen.classList.remove("hidden");
+
+        } catch (error) {
+
+            switch (error.code) {
+
+                case "auth/user-not-found":
+                    alert("No account exists with this email.");
+                    break;
+
+                case "auth/invalid-email":
+                    alert("Email address is invalid.");
+                    break;
+
+                default: alert("Unable to send reset email.");
+            }
+
+        } finally {
+            button.textContent = "Send Reset Link";
+            button.disabled = false;
+        }
+    });
+}
 
 // Create Account Navigation
-createAccountNav.addEventListener("click", () => {
-    hideAllScreens();
-    createAccountScreen.classList.remove("hidden");
-});
+
+if (createAccountNav) {
+    createAccountNav.addEventListener("click", () => {
+        hideAllScreens();
+        if (createAccountScreen) createAccountScreen.classList.remove("hidden");
+    });
+}
 
 // Login Navigation
-loginNavBtn.addEventListener("click", () => {
-    hideAllScreens();
-    loginScreen.classList.remove("hidden");
-});
+
+if (loginNavBtn) {
+    loginNavBtn.addEventListener("click", () => {
+        hideAllScreens();
+        if (loginScreen) loginScreen.classList.remove("hidden");
+    });
+}
