@@ -4,6 +4,8 @@
   "description": "",
   "main": "src/Pages/script.js",
   "scripts": {
+    "build": "echo 'No build step required'",
+    
     "test": "npm run check",
     "check": "node --check src/javascript/script.js && node --check src/javascript/script-login.js && node --check src/javascript/chat.js && node --check src/javascript/explore.js && node --check src/javascript/profile.js"
   },
