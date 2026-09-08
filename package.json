@@ -5,7 +5,7 @@
   "main": "src/Pages/script.js",
   "scripts": {
     "test": "npm run check",
-    "check": "node --check src/Pages/script.js && node --check src/Pages/script-login.js && node --check src/Pages/chat.js && node --check src/Pages/explore.js && node --check src/Pages/profile.js"
+    "check": "node --check src/javascript/script.js && node --check src/javascript/script-login.js && node --check src/javascript/chat.js && node --check src/javascript/explore.js && node --check src/javascript/profile.js"
   },
   "keywords": [],
   "author": "",
@@ -14,7 +14,8 @@
   "dependencies": {
     "@tailwindcss/forms": "^0.5.11",
     "firebase": "^12.18.0",
-    "tailwindcss": "^4.3.2"
+    "tailwindcss": "^4.3.2",
+    "@tailwindcss/cli": "^4.3.3"
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.3.3"
