@@ -286,7 +286,7 @@ if (createAccountForm) {
         username: firstName.value.trim().toLowerCase() + Math.floor(Math.random() * 1000),
         email: signUpEmailField.value.trim(),
         password: createPassword.value,
-        profileImage: "./images/Profile_img (0).jpg",
+        profileImage: "../../images/Profile_img (0).jpg",
         gender: gender.value,
         dateOfBirth: DateOfBirth.value,
         followers: [],
