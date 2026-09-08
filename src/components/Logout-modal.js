@@ -41,7 +41,7 @@ export function initLogoutModal() {
     logOutBtn?.addEventListener("click", async () => {
         try {
             await logout();
-            window.location.href = "./Login-page.html";
+            window.location.href = "../../pages/Login-page.html";
         } catch (error) {
             console.error("Logout failed:", error);
         }

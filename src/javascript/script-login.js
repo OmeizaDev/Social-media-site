@@ -98,7 +98,7 @@ if (loginForm) {
         setTimeout(async () => {
             try {
                 await login(emailField.value.trim(), passwordField.value);
-                window.location.href = "./index.html";
+                window.location.href = "../index.html";
             } catch (error) {
                 if (
                     error.code === "auth/invalid-credential" ||
@@ -286,7 +286,7 @@ if (createAccountForm) {
         username: firstName.value.trim().toLowerCase() + Math.floor(Math.random() * 1000),
         email: signUpEmailField.value.trim(),
         password: createPassword.value,
-        profileImage: "../../images/Profile_img (0).jpg",
+        profileImage: "./images/Profile_img (0).jpg",
         gender: gender.value,
         dateOfBirth: DateOfBirth.value,
         followers: [],
@@ -300,7 +300,7 @@ if (createAccountForm) {
         newUser.id = createdUser.uid;
         delete newUser.password;
         await saveUserToFirestore(newUser);
-        window.location.href = "./index.html";
+        window.location.href = "../../index.html";
 
     } catch (error) {
         if (error.code === "auth/email-already-in-use") {

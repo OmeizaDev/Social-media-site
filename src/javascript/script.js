@@ -21,7 +21,7 @@ showLoading(feed);
 appState.currentUser = await getAuthenticatedUser();
 
 if (!appState.currentUser) {
-    window.location.href = "./Login-page.html";
+    window.location.href = "../../pages/Login-page.html";
     throw new Error("User not authenticated.");
 }
 
@@ -44,7 +44,7 @@ async function initApp() {
 // If user is not logged in
 
 if (!appState.currentUser) {
-    window.location.href = "./Login-page.html";
+    window.location.href = "../../pages/Login-page.html";
 }
 
 // Load Components
@@ -471,12 +471,12 @@ document.addEventListener("commentsUpdated", async () => {
 
 document.addEventListener("messageSelected", (event) => {
     const { userId } = event.detail;
-    window.location.href = `chat.html?userId=${userId}`;
+    window.location.href = `../pages/chat.html?userId=${userId}`;
 });
 
 document.addEventListener("friendSelected", (event) => {
     const { userId } = event.detail;
-    window.location.href = `chat.html?userId=${userId}`;
+    window.location.href = `../pages/chat.html?userId=${userId}`;
 });
 
 // Open Create Post
@@ -539,7 +539,7 @@ function setupUserSearch(inputId, resultsId) {
 
             item.addEventListener("click", () => {
                 const userId = item.dataset.userId;
-                window.location.href = `profile-page.html?userId=${userId}`;
+                window.location.href = `../../pages/profile-page.html?userId=${userId}`;
             });
         });
     });

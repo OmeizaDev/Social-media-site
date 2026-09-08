@@ -4,19 +4,19 @@ export function Sidebar() {
     return `
       <div class="sidebar">
         <div class="Logo">
-            <a href="index.html">
+            <a href="../../index.html">
                 <img src="../../images/Logo_lite.png" class="logo-image" alt="Logo">
             </a> 
         </div>
-        <a href="index.html" class="menu-item" data-section="home-section">
+        <a href="../../index.html" class="menu-item" data-section="home-section">
             <span class="material-symbols-outlined">home</span> 
             <h5>Home</h5>
         </a>
-        <!---- <a href="explorepage.html" class="menu-item">
+        <!---- <a href="../../pages/explorepage.html" class="menu-item">
             <span class="material-symbols-outlined">explore</span> 
             <h5>Explore</h5>
         </a> ---->
-        <a href="chat.html" class="menu-item messages-notification" id="mobile-messages" data-section="messages">
+        <a href="../../pages/chat.html" class="menu-item messages-notification" id="mobile-messages" data-section="messages">
             <span class="material-symbols-outlined">mail</span> 
             <small class="notification-count message-count hidden">0</small> 
             <h5>Messages</h5>
