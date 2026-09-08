@@ -353,8 +353,8 @@
   .bg-white {
     background-color: var(--color-white);
   }
-  .bg-\[url\(\'\.\.\/\.\.\/images\/Login-image\.jpg\'\)\] {
-    background-image: url('../../images/Login-image.jpg');
+  .bg-\[url\(\'\.\.\/images\/Login-image\.jpg\'\)\] {
+    background-image: url('../images/Login-image.jpg');
   }
   .bg-cover {
     background-size: cover;
