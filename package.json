@@ -4,10 +4,10 @@
   "description": "",
   "main": "src/Pages/script.js",
   "scripts": {
-  "dev": "npx @tailwindcss/cli -i ./src/input.css -o ./src/output.css --watch",
-  "build": "npx @tailwindcss/cli -i ./src/input.css -o ./src/output.css",
+  "dev": "npx @tailwindcss/cli -i ./pages/input.css -o ./pages/output.css --watch",
+  "build": "npx @tailwindcss/cli -i ./pages/input.css -o ./pages/output.css",
   "test": "npm run check",
-  "check": "node --check src/Pages/script.js && node --check src/Pages/script-login.js && node --check src/Pages/chat.js && node --check src/Pages/explore.js && node --check src/Pages/profile.js"
+  "check": "node --check src/javascript/script.js && node --check src/javascript/script-login.js && node --check src/javascript/chat.js && node --check src/javascript/explore.js && node --check src/javascript/profile.js"
 },
   "keywords": [],
   "author": "",
