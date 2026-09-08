@@ -134,7 +134,7 @@ function renderMessages(messages) {
             String(user.id) === String(message.senderId)
         );
 
-        const senderImage = sender?.profileImage || "./images/default-profile.jpg";
+        const senderImage = sender?.profileImage || "../../images/default-profile.jpg";
 
         html += `
             <div class="message ${ isSent ? "sent" : "recieved" }">
