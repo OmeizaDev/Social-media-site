@@ -12,9 +12,11 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
-    "@tailwindcss/cli": "^4.3.2",
     "@tailwindcss/forms": "^0.5.11",
     "firebase": "^12.18.0",
     "tailwindcss": "^4.3.2"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.3.3"
   }
 }
