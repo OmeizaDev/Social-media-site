@@ -17,12 +17,12 @@ Say Hi is a social media web application where users can connect, share posts an
 
 ## Screenshots
 
-<img src="./images/loginscreen.png" width="400"/>
-<img src="./images/homescreen.png" width="400"/>
-<img src="./images/viewstorymodal.png" width="400"/>
-<img src="./images/createpostmodal.png" width="400"/>
-<img src="./images/chatscreen.png" width="400"/>
-<img src="./images/profilescreen.png" width="400"/>
+<img src="./images/loginscreen.png" width="100%"/>
+<img src="./images/homescreen.png" width="100%"/>
+<img src="./images/viewstorymodal.png" width="100%"/>
+<img src="./images/createpostmodal.png" width="100%"/>
+<img src="./images/chatscreen.png" width="100%"/>
+<img src="./images/profilescreen.png" width="100%"/>
 
 
 ##  Technologies Used
