@@ -16,7 +16,6 @@ Say Hi is a social media web application where users can connect, share posts an
 * Logout
 
 ## Screenshots
-<p>
 
 <img src="./images/loginscreen.png" width="400"/>
 <img src="./images/homescreen.png" width="400"/>
@@ -25,7 +24,6 @@ Say Hi is a social media web application where users can connect, share posts an
 <img src="./images/chatscreen.png" width="400"/>
 <img src="./images/profilescreen.png" width="400"/>
 
-</p>
 
 ##  Technologies Used
 
