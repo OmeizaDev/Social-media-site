@@ -36,7 +36,7 @@ Say Hi is a social media web application where users can connect, share posts an
 * Git & GitHub
 * Netlify
 
-## 📦 Installation
+## Installation
 
 ### 1. Clone the repository
 
@@ -56,12 +56,12 @@ The project is deployed using Netlify.
 
 # What's Next?
 
-* [] Better image storage
-* [] Notifications
-* [] More messaging features
-* [] Video Calling
-* [] Sending and Uploading Videos
-* [] Performance improvements
+* Better image storage
+* Notifications
+* More messaging features
+* Video Calling
+* Sending and Uploading Videos
+* Performance improvements
 
 ## Author
 
